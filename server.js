@@ -1,20 +1,16 @@
 const express = require('express');
-const path = require('path');
 const PORT = 3000
-
 const app = express();
+const secret = require('./secret');
+const logger = require('morgan');
+const path = require("path");
 
-app.use(express.static(path.join(__dirname, 'website')));
+app.use(logger("dev"));
 
-app.use('/favicon.ico', (req, res) => {
-    res.sendFile(path.join(__dirname, 'website', 'favicon', 'favicon.ico'));
-});
+app.use(express.static("public"));
 
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'website', 'index.html'));
-});
+app.use("/secret", secret);
 
 app.listen(PORT, () => {
-    console.log(`Server running at localhost:${PORT}`);
+    console.log(`Listening on port ${PORT}`);
 });
