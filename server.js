@@ -25,6 +25,22 @@ app.use((err, req, res, next) => {
     res.status(500).send("Something broke :(");
 });
 
+app.get("/mootodo", (req, res) => {
+    // get todo items
+});
+
+app.post("/mootodo", (req, res) => {
+    // create new todo item
+});
+
+app.put("/mootodo", (req, res) => {
+    // update todo item
+});
+
+app.delete("/mootodo", (req, res) => {
+    // delete a todo item
+});
+
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });
