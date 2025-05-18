@@ -1,9 +1,8 @@
 const todos = document.getElementById("todos");
-const newButton = document.getElementById("new");
-const editButton = document.getElementById("edit");
-const deleteButton = document.getElementById("delete");
+const newButton = document.getElementById("newTodo");
 
-fetch("/api/mootodos")
+function handleGet() {
+    fetch("/api/mootodos")
     .then(res => res.json())
     .then(data => {
         data.forEach(item => {
@@ -16,36 +15,63 @@ fetch("/api/mootodos")
             text.innerText = "Contents: " + item.text;
 
             el.appendChild(title);
-            el.appendChild(completed);
             el.appendChild(text);
+            el.appendChild(completed);
             el.id = item.id;
             el.name = "todo-item";
+
+            const deleteButton = document.createElement("button");
+            deleteButton.addEventListener("click", () => handleDelete(item.id));
+            deleteButton.innerText = "Delete";
+            const updateButton = document.createElement("button");
+            updateButton.addEventListener("click", () => handleUpdate());
+            updateButton.innerText = "Update";
+
+            el.appendChild(deleteButton);
+            el.appendChild(updateButton);
 
             todos.appendChild(el);
         })
     });
+}
 
+function handleDelete(id) {
+    fetch("/api/mootodos", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/JSON"
+        },
+        body: JSON.stringify({
+            "id": id
+        })
+    });
+    window.location.reload();
+}
 
+function handleUpdate() {
+    console.log("update does nothing for now :(");
+}
 
 newButton.addEventListener("click", () => {
+    const title = document.getElementById("todoTitle").value;
+    const text = document.getElementById("todoText").value;
+
+    console.log(title);
+    console.log(text);
+
     // create new child
-    console.log("DEBUG: creating new todo item");
-    fetch("/api/mootodos", {method: "POST", body: JSON.stringify(
-        {
-            title: "New 2do",
-            text: "A new todo item",
-            completed: false
-        }
-    )});
+    fetch("/api/mootodos", {
+            method: "POST", 
+            headers: {
+                "Content-Type": "application/JSON"
+            },
+            body: JSON.stringify({
+                "title": title,
+                "text": text
+            })
+        });
+
+    window.location.reload();
 });
 
-editButton.addEventListener("click", () => {
-    // create new child
-    console.log("DEBUG: editing selected todo item");
-});
-
-deleteButton.addEventListener("click", () => {
-    // create new child
-    console.log("DEBUG: deleting todo item");
-});
-
+window.onload=handleGet

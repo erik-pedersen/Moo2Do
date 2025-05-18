@@ -14,21 +14,8 @@ const path = require("path");
 // temporary in-memory database:
 
 data = {
-    todos: [
-        {
-            id: 1,
-            title: "First",
-            text: "This is a todo item",
-            completed: true
-        },
-        {
-            id: 2,
-            title: "Another todo",
-            text: "This is another todo item",
-            completed: false
-        },
-    ],
-    nextId: 3
+    todos: [],
+    nextId: 1
 }
 
 function addToData(title, text) {

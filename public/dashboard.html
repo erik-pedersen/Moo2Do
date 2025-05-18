@@ -10,18 +10,22 @@
         <h1> Welcome to Moo2Do! 🐄✅ </h1>
 
         <div name="todos" id="todos">
-            <div name="todo-item" id=1337> 
-                <p> Title: SAMPLE ITEM </p>
-                <p> State: TODO/DONE </p>
-                <p> Text: This is some sample text for this TODO item </p>
-                <div name="todo-item-buttons"> 
-                    <button id="edit"> Edit </button>
-                    <button id="delete"> Delete </button>
-                </div>
-            </div>
         </div>
 
-        <button id="new"> New todo </button>
+        <div id="newTodoDiv">
+            <p>
+                <label for="todoTitle"> Title: </label>
+                <input id="todoTitle">
+            </p>
+            <p>
+                <label for="todoText"> Text: </label>
+                <input id="todoText">
+            </p>
+            <p>
+                <button id="newTodo"> New Todo </button>
+            </p>
+        </div>
+
 
         <script src="scripts.js"> </script>
     </body>
