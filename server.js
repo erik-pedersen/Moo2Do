@@ -31,13 +31,50 @@ data = {
     nextId: 3
 }
 
-// con.connect( (err) => {
-//     if (err) throw err;
-//     console.log("Connected to MySQL database.\n");
-// });
+function addToData(title, text) {
+    const newItem = {};
+
+    newItem.id = data.nextId;
+    data.nextId += 1;
+
+    newItem.title = title;
+    newItem.text = text;
+    newItem.completed = false;
+
+    data.todos.push(newItem);
+}
+
+function deleteData(id) {
+    const index = data.todos.findIndex((element) => {
+        return element.id === id;
+    });
+
+    if (index > -1) {
+        data.todos.splice(index, 1);
+    } else {
+        throw invalidId;
+    }
+}
+
+function updateData(id, title, text, completed) {
+    if (!title || !text) {
+        throw invalidBody;
+    }
+    const index = data.todos.findIndex((element) => {
+        return element.id === id;
+    });
+
+    if (index > -1) {
+        data.todos[index].title = title;
+        data.todos[index].text = text;
+        data.todos[index].completed = completed;
+    } else {
+        throw invalidId;
+    }
+}
 
 app.use(logger("dev"));
-
+app.use(express.json());
 app.use(express.static("public"));
 
 app.get("/dashboard", (req, res) => {
@@ -50,25 +87,72 @@ app.use((err, req, res, next) => {
 });
 
 app.get("/api/mootodos", (req, res) => {
-    res.status(200)
-    res.json(data.todos)
+    res.status(200);
+    res.json(data.todos);
 });
 
 app.post("/api/mootodos", (req, res) => {
-    res.status(200)
-    const item = req.body
-    console.log(item)
-    // create new todo item
+    const item = req.body;
+    if (!item) {
+        res.status(400);
+        throw new Error("Missing body");
+    }
+
+    console.log(item.title, item.text);
+
+    if (!item["title"] || !item["text"]) {
+        res.status(400);
+        throw new Error("Missing title or text");
+    }
+
+    addToData(item.title, item.text);
+    res.status(200);
+    res.send("success");
 });
 
 app.put("/api/mootodos", (req, res) => {
-    res.status(200)
-    // update todo item
+    const item = req.body;
+    if (!item) {
+        res.status(400);
+        throw new Error("Missing body");
+    }
+
+    if (!item.id || !item.title || !item.text || !("completed" in item)) {
+        res.status(400);
+        throw new Error("Missing id, title, text");
+    }
+
+    try {
+        updateData(item.id, item.title, item.text, item.completed);
+    } catch (e) {
+        if (e instanceof invalidId) {
+            throw new Error("Invalid ID provided");
+        } else if (e instanceof invalidBody) {
+            throw new Error ("Missing title, text or completion");
+        }
+        res.status(400);
+    }
+
+    res.status(200);
+    res.send("success");
 });
 
 app.delete("/api/mootodos", (req, res) => {
-    res.status(200)
-    // delete a todo item
+    const item = req.body;
+    if (!item || !item.id) {
+        res.status(400);
+        throw new Error("No ID provided");
+    }
+
+    try {
+        deleteData(item.id);
+    } catch (invalidId) {
+        res.status(400);
+        throw new Error("That ID does not match any listed IDs");
+    }
+
+    res.status(200);
+    res.send("success");
 });
 
 app.listen(PORT, () => {
