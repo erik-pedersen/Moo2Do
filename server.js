@@ -13,10 +13,81 @@ const path = require("path");
 
 // temporary in-memory database:
 
-data = {
-    todos: [],
-    nextId: 1
-}
+class User {
+    private:
+        let username;
+        let passwordDigest;
+        const todos = [];
+        let nextTodoId = 0;
+        const id;
+
+    public:
+        User(nextId, username, passwordDigest) {
+            this.username = username;
+            this.passwordDigest = passwordDigest;
+            this.id = nextId;
+        }
+
+        addTodo(todo) {
+            todos.push(todo);
+        }
+
+        deleteTodo(todoId) {
+            // delete the todo item for this user
+        }
+
+        updateTodo(todo) {
+            // finds todo with todo.id and changes fields
+        }
+
+        getTodo(todoId) {
+            // returns todo with corresponding Id
+        }
+};
+
+class Todo {
+    private:
+        const id;
+        let title;
+        let text;
+        let completed;
+
+    public:
+        Todo(title, text, nextTodoId) {
+            this.id = nextTodoId;
+            this.title = title;
+            this.text = text;
+            this.completed = False;
+        }
+
+        getTitle() {
+            return this.title;
+        }
+
+        setTitle(title) {
+            this.title = title;
+        }   
+
+        getText() {
+            return this.text;
+        }
+
+        setText(text) {
+            this.text = text;
+        }   
+
+        getCompleted() {
+            return this.completed;
+        }
+
+        setCompleted(completed) {
+            this.completed = completed;
+        }   
+
+        getId() {
+            return this.id;
+        }
+};
 
 function addToData(title, text) {
     const newItem = {};

@@ -1,0 +1,11 @@
+- User registration
+    - User clicks sign-up
+    - User can signup using either OAUTH or user+pass
+        -OAUTH: Google, Github, Facebook
+        -User+pass: find out how to do this securely
+- User login
+    - User clicks login
+    - Can use OAUTH or user+pass to login
+- User session
+    - Use session token to identify user. Should contain user's ID.
+    - ON THE BACKEND we receive a user's token and decode it to a corresponding user ID. This is used to access the user's data.
