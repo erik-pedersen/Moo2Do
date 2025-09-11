@@ -1,0 +1,1 @@
+At the moment, todos and todo IDs are stored in the 'data' variable in todos.js. This should be changed to use a database instead.
