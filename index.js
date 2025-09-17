@@ -1,12 +1,15 @@
 import express from 'express';
+import { dirname } from 'path';
+import path from 'path';
 import { getTodos, createTodo, editTodo, deleteTodo } from './todos.js';
 
 const app = express();
 
 app.use(express.json());
+app.use(express.static(path.join(import.meta.dirname, 'static')));
 
 app.get('/', (req, res) => {
-    res.send('Hello world!');
+    res.sendFile(path.join(import.meta.dirname, 'static'));
 });
 
 // Test API
@@ -32,13 +35,15 @@ app.get('/api/todo', (req, res) => {
  * @param text {string}
  */
 app.post('/api/todo', (req, res) => {
-    const { text } = req.body;
-    createTodo(text);
+    const text = req.body.text;
+    const todo = createTodo(text);
 
     res.json(
         { 
             success: true,
-            data: {}
+            data: {
+                todo: todo
+            }
         }
     );
 });
@@ -48,13 +53,15 @@ app.post('/api/todo', (req, res) => {
  * @param id {number}
  */
 app.put('/api/todo', (req, res) => {
-    const { id, text } = req.body;
-    editTodo(id, text);
+    const { id, text, completed } = req.body;
+    const todo = editTodo(id, text, completed);
 
     res.json(
         { 
             success: true,
-            data: {}
+            data: {
+                todo: todo
+            }
         }
     );
 });
