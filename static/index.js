@@ -16,6 +16,13 @@ async function deleteTodo(id) {
 
     const li = document.getElementById(`li${id}`);
     li.parentNode.removeChild(li);
+    const todos = document.getElementById('todos');
+    if (todos.childElementCount === 0) {
+        const b = document.createElement('b');
+        b.id = "allDoneText";
+        b.textContent = "All done! 🐮✅";
+        todos.appendChild(b);
+    }
 }
 
 async function editTodo(id, text, completed) {
@@ -33,50 +40,25 @@ async function editTodo(id, text, completed) {
     const rest = await resp.json();
     const todo = rest.data.todo;
 
-
-    const checkbox = document.getElementById(`checkbox${id}`);
-    const button = document.getElementById(`button${id}`);
-    const editButton = document.getElementById(`editButton${id}`);
-    const s = document.getElementById(`s${id}`);
-    const label = document.getElementById(`label${id}`);
-    label.textContent = todo.text;
     const li = document.getElementById(`li${id}`);
-    if (s && label) {
-        s.removeChild(label);
-    } else {
-        li.removeChild(label);
-    }
-
-    if (s && checkbox) {
-        s.removeChild(checkbox);
-    } else {
-        li.removeChild(checkbox);
-    }
-
-    if (s) li.removeChild(s);
-    li.removeChild(button);
-    li.removeChild(editButton);
-
-    if (completed) {
-        const s = document.createElement('s');
-        s.id = `s${id}`;
-        s.appendChild(checkbox);
-        s.appendChild(label);
-        li.appendChild(s);
-    } else {
-        li.appendChild(checkbox);
-        li.appendChild(label);
-    }
-
-    li.appendChild(button);
-    li.appendChild(editButton);
+    li.parentNode.removeChild(li);
+    createTodoProperties(id, text, completed);
 }
 
 async function getTodos() {
     const resp = await fetch('http://localhost:3000/api/todo')
     const resu = await resp.json();
+    let flag = false;
     for (let e of resu.data.todos) {
+        flag = true;
         createTodoProperties(e.id, e.text, e.completed);
+    }
+
+    if (!flag) {
+        const b = document.createElement('b');
+        b.textContent = "All done! 🐮✅";
+        b.id = "allDoneText";
+        document.getElementById("todos").appendChild(b);
     }
 }
 
@@ -151,6 +133,11 @@ async function createTodo(text) {
 
     createTodoProperties(todo.id, todo.text, todo.completed);
     document.getElementById('textbox').value = '';
+
+    const b = document.getElementById('allDoneText');
+    if (b) {
+        b.parentNode.removeChild(b);
+    }
 };
 
 getTodos();
